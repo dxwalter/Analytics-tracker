@@ -1,0 +1,35 @@
+{
+  "name": "backend-test-chigisoft",
+  "version": "1.0.0",
+  "description": "Backend development assessment test",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 10000",
+    "start": "nodemon node server.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "DB/*"
+    ],
+    "delay": 500
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "i": "^0.3.6",
+    "jest": "^26.6.3",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "nedb": "^1.8.0",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3",
+    "swagger-autogen": "^2.8.1",
+    "swagger-ui-express": "^4.1.6"
+  }
+}
