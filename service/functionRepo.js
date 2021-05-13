@@ -8,7 +8,7 @@ writeToFile = (data) => {
     return new Promise((resolve, reject) => {
         fs.appendFile(path.resolve(__dirname, dbPath), JSON.stringify(data) + '\r', err => {
             if (err) reject({
-                message: err.message
+                message: 'An error occurred saving your data'
             })
 
             resolve({
@@ -43,7 +43,11 @@ formatDate = (data) => {
 }
 
 calculateDistance = (x, y) => {
-    return (x*x) + (y*y)
+    if (isNaN(x) === false && isNaN(y) === false) {
+        return (x*x) + (y*y)
+    } else {
+        return 'Invalid cordinates'
+    }
 }
 
 getLatestData = (eventData) => {
