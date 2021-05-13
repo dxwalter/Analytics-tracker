@@ -25,18 +25,11 @@ router.get('/', (req, res, next) => {
 
     if (ip) {
         mainFunctions.findDistance(ip).then(result => {
-            if (result.distance) {
-                res.status(200).send({
-                    status: 'success',
-                    distance: result.distance
-                })
-            } else {
-                res.status(404).send({
-                    status: 'success',
-                    distance: result.distance,
-                    message: result.message
-                })
-            }
+            res.status(result.distance ? 200 : 404).send({
+                status: 'success',
+                distance: result.distance,
+                message: result.message
+            })
         }).catch(error => {
             res.status(500).send({
                 status: 'error',

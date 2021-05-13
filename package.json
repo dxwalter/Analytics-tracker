@@ -31,5 +31,8 @@
     "supertest": "^6.1.3",
     "swagger-autogen": "^2.8.1",
     "swagger-ui-express": "^4.1.6"
+  },
+  "engines": {
+      "node": "12.x"
   }
 }

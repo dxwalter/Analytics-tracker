@@ -2,10 +2,11 @@ const { captureRejectionSymbol } = require('events')
 const fs = require('fs')
 const moment = require('moment')
 const path = require('path')
+const dbPath = '../DB/index.json'
 
 writeToFile = (data) => {
     return new Promise((resolve, reject) => {
-        fs.appendFile(path.resolve(__dirname, '../DB/index.json'), JSON.stringify(data) + '\r', err => {
+        fs.appendFile(path.resolve(__dirname, dbPath), JSON.stringify(data) + '\r', err => {
             if (err) reject({
                 message: err.message
             })
@@ -18,24 +19,24 @@ writeToFile = (data) => {
 }
 
 clearDatabase = () => {
-    fs.writeFile(path.resolve(__dirname, '../DB/index.json'), '', err => {})
+    fs.writeFile(path.resolve(__dirname, dbPath), '', err => {})
 }
 
 saveMockData = (data) => {
     for (const validData of data) {
-        fs.appendFile(path.resolve(__dirname, '../DB/index.json'), JSON.stringify(validData) + '\r', err => {})
+        fs.appendFile(path.resolve(__dirname, dbPath), JSON.stringify(validData) + '\r', err => {})
     }
 }
 
 updateDatabase = (data) => {
     // clear data
-    fs.writeFile(path.resolve(__dirname, '../DB/index.json'), '', err => {})
+    fs.writeFile(path.resolve(__dirname, dbPath), '', err => {})
     for (const validData of data) {
-        fs.appendFile(path.resolve(__dirname, '../DB/index.json'), JSON.stringify(validData) + '\r', err => {})
+        fs.appendFile(path.resolve(__dirname, dbPath), JSON.stringify(validData) + '\r', err => {})
     }
 }
 
-formatData = (data) => {
+formatDate = (data) => {
     return moment.unix(data).format(
         'MMMM Do YYYY, h:mm a'
       )
@@ -54,9 +55,9 @@ getLatestData = (eventData) => {
         const parseData = JSON.parse(data)
         const validParsedData = JSON.parse(data)
         const validTime = currentTime - parseData.createdAt
-        if (validTime <= 10600) {
+        if (validTime <= 3600) {
             validData.push(validParsedData)
-            parseData.createdAt = formatData(parseData.createdAt)
+            parseData.createdAt = formatDate(parseData.createdAt)
             parseData.distance = calculateDistance(Number(parseData.coordinates.x), Number(parseData.coordinates.y))
             customData.push(parseData)
         }
@@ -67,10 +68,8 @@ getLatestData = (eventData) => {
 
 readAllData = () => {
     return new Promise((resolve, reject) => {
-        // i += 0;
         let event = [];
-        fs.readFileSync(path.resolve(__dirname, '../DB/index.json'), 'utf8').toString().split('\r').forEach(function (line) {
-            // i += 1;
+        fs.readFileSync(path.resolve(__dirname, dbPath), 'utf8').toString().split('\r').forEach(function (line) {
             if (line) {
                 event.push(line);
             }	
@@ -102,7 +101,8 @@ findDistance = (ip) => {
             if (validRecord.length > 0) {
                 const record = validRecord[validRecord.length - 1]
                 resolve({
-                    distance: record.distance
+                    distance: record.distance,
+                    message: 'Record found'
                 })
             } else {
                 resolve({
@@ -110,10 +110,10 @@ findDistance = (ip) => {
                     message: 'No record was found'
                 })
             }
-        })
-    }).catch(err => {
-        reject({
-            message: 'No record was found'
+        }).catch(err => {
+            reject({
+                message: err.message
+            })
         })
     })
 }
